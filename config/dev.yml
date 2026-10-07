@@ -1,0 +1,19 @@
+environment: dev
+
+gcp:
+  project_id: varun2011-510908
+  region: asia-south1
+
+storage:
+  raw_bucket: varun2011-510908-retail-dev-raw
+  bronze_bucket: varun2011-510908-retail-dev-bronze
+  silver_bucket: varun2011-510908-retail-dev-silver
+  quarantine_bucket: varun2011-510908-retail-dev-quarantine
+  code_bucket: varun2011-510908-retail-dev-code
+
+bigquery:
+  config_dataset: retail_dev_config
+  state_dataset: retail_dev_state
+  audit_dataset: retail_dev_audit
+  silver_dataset: retail_dev_silver
+  gold_dataset: retail_dev_gold
