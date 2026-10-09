@@ -1,0 +1,98 @@
+provider_id: provider_retail
+
+table_name: retail_sales_silver
+
+grain: invoice_line_item
+
+format: parquet
+
+partition_column: InvoiceDate
+
+columns:
+  - name: InvoiceNo
+    type: STRING
+    nullable: false
+
+  - name: StockCode
+    type: STRING
+    nullable: false
+
+  - name: Description
+    type: STRING
+    nullable: true
+
+  - name: Quantity
+    type: INT64
+    nullable: false
+
+  - name: InvoiceDate
+    type: TIMESTAMP
+    nullable: false
+
+  - name: UnitPrice
+    type: FLOAT64
+    nullable: false
+
+  - name: CustomerID
+    type: STRING
+    nullable: true
+    masking: HMAC_SHA256
+
+  - name: Country
+    type: STRING
+    nullable: false
+
+  - name: LineAmount
+    type: FLOAT64
+    nullable: false
+    derived_from:
+      - Quantity
+      - UnitPrice
+
+  - name: IsCancellation
+    type: BOOLEAN
+    nullable: false
+    derived_from:
+      - InvoiceNo
+
+  - name: SourceFile
+    type: STRING
+    nullable: false
+
+  - name: SourceDate
+    type: DATE
+    nullable: false
+
+  - name: SourceChecksum
+    type: STRING
+    nullable: false
+
+  - name: PipelineRunID
+    type: STRING
+    nullable: false
+
+  - name: ProcessedAt
+    type: TIMESTAMP
+    nullable: false
+
+deduplication:
+  strategy: exact_row
+  hash_algorithm: SHA256
+  source_columns:
+    - InvoiceNo
+    - StockCode
+    - Description
+    - Quantity
+    - InvoiceDate
+    - UnitPrice
+    - CustomerID
+    - Country
+
+business_rules:
+  preserve_cancellations: true
+  cancellation_condition: "STARTS_WITH(InvoiceNo, 'C')"
+
+output:
+  path: gs://varun2011-510908-retail-dev-silver/provider_retail/
+  partition_by: InvoiceDate
+  file_format: parquet

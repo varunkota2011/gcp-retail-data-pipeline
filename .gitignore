@@ -32,3 +32,9 @@ crash.log
 
 # Logs
 *.log
+
+# Local test artifacts
+test_data/
+gcs_test/
+gcs_test$*
+where
